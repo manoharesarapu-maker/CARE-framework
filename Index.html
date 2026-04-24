@@ -1,0 +1,1342 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>C.A.R.E. Framework — City of Port Phillip</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --teal:   #1a8c7e;
+    --teal-light: #25b5a4;
+    --teal-bg: #e6f5f3;
+    --blue:   #1e6fa8;
+    --blue-light: #2a8fd4;
+    --blue-bg: #e3f0f9;
+    --red:    #9b2335;
+    --red-light: #c42d42;
+    --red-bg: #f7e8ea;
+    --orange: #c96a14;
+    --orange-light: #e07d20;
+    --orange-bg: #fdf0e3;
+    --grey-900: #111827;
+    --grey-800: #1f2937;
+    --grey-600: #4b5563;
+    --grey-400: #9ca3af;
+    --grey-100: #f3f4f6;
+    --white: #ffffff;
+    --surface: #fafafa;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--surface);
+    color: var(--grey-900);
+    min-height: 100vh;
+  }
+
+  /* ── HEADER ── */
+  .header {
+    background: var(--grey-900);
+    padding: 24px 40px 20px;
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    border-bottom: 3px solid var(--teal);
+  }
+  .header-left {}
+  .header-eyebrow {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--teal-light);
+    margin-bottom: 6px;
+  }
+  .header-title {
+    font-family: 'Syne', sans-serif;
+    font-size: 28px;
+    font-weight: 800;
+    color: var(--white);
+    letter-spacing: -0.5px;
+    line-height: 1;
+  }
+  .header-title span { color: var(--teal-light); }
+  .header-sub {
+    margin-top: 6px;
+    font-size: 13px;
+    color: var(--grey-400);
+    font-weight: 300;
+  }
+  .header-badge {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+  }
+  .badge-pill {
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.5px;
+    padding: 5px 12px;
+    border-radius: 20px;
+    border: 1px solid rgba(255,255,255,0.15);
+    color: rgba(255,255,255,0.6);
+    font-family: 'DM Sans', sans-serif;
+  }
+
+  /* ── BREADCRUMB ── */
+  .breadcrumb-bar {
+    background: var(--white);
+    border-bottom: 1px solid #e5e7eb;
+    padding: 12px 40px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    min-height: 48px;
+  }
+  .breadcrumb-item {
+    font-size: 13px;
+    color: var(--grey-400);
+    cursor: pointer;
+    transition: color 0.2s;
+    font-family: 'DM Sans', sans-serif;
+  }
+  .breadcrumb-item:hover { color: var(--grey-900); }
+  .breadcrumb-item.active { color: var(--grey-900); font-weight: 500; }
+  .breadcrumb-sep { color: var(--grey-400); font-size: 12px; }
+
+  /* ── MAIN ── */
+  .main { padding: 32px 40px 60px; max-width: 1400px; margin: 0 auto; }
+
+  /* ── SECTION LABEL ── */
+  .section-label {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--grey-400);
+    margin-bottom: 16px;
+    font-family: 'Syne', sans-serif;
+  }
+
+  /* ── VIEWS ── */
+  .view { display: none; animation: fadeUp 0.3s ease; }
+  .view.active { display: block; }
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(10px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ── VIEW 0: ENABLER CARDS ── */
+  .enabler-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+  }
+  @media (max-width: 900px) { .enabler-grid { grid-template-columns: 1fr; } }
+
+  .enabler-card {
+    border-radius: 16px;
+    padding: 32px;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+    border: 2px solid transparent;
+  }
+  .enabler-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 16px 48px rgba(0,0,0,0.12);
+  }
+  .enabler-card.c { background: var(--teal-bg); border-color: var(--teal); }
+  .enabler-card.a { background: var(--blue-bg); border-color: var(--blue); }
+  .enabler-card.r { background: var(--red-bg); border-color: var(--red); }
+  .enabler-card.e { background: var(--orange-bg); border-color: var(--orange); }
+
+  .enabler-letter {
+    width: 56px; height: 56px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Syne', sans-serif;
+    font-size: 28px;
+    font-weight: 800;
+    color: var(--white);
+    margin-bottom: 16px;
+    flex-shrink: 0;
+  }
+  .c .enabler-letter { background: var(--teal); }
+  .a .enabler-letter { background: var(--blue); }
+  .r .enabler-letter { background: var(--red); }
+  .e .enabler-letter { background: var(--orange); }
+
+  .enabler-name {
+    font-family: 'Syne', sans-serif;
+    font-size: 20px;
+    font-weight: 700;
+    margin-bottom: 4px;
+  }
+  .c .enabler-name { color: var(--teal); }
+  .a .enabler-name { color: var(--blue); }
+  .r .enabler-name { color: var(--red); }
+  .e .enabler-name { color: var(--orange); }
+
+  .enabler-full {
+    font-size: 13px;
+    font-weight: 400;
+    color: var(--grey-600);
+    margin-bottom: 12px;
+  }
+  .enabler-tagline {
+    font-size: 14px;
+    line-height: 1.5;
+    color: var(--grey-800);
+    margin-bottom: 20px;
+  }
+
+  .enabler-meta {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+  .meta-chip {
+    font-size: 11px;
+    font-weight: 500;
+    padding: 4px 10px;
+    border-radius: 12px;
+    background: rgba(255,255,255,0.7);
+    color: var(--grey-600);
+    letter-spacing: 0.3px;
+  }
+
+  .enabler-arrow {
+    position: absolute;
+    top: 32px; right: 32px;
+    font-size: 20px;
+    opacity: 0.4;
+    transition: opacity 0.2s, transform 0.2s;
+  }
+  .enabler-card:hover .enabler-arrow { opacity: 1; transform: translateX(4px); }
+
+  /* ── VIEW 1: LEVELS ── */
+  .levels-header {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 28px;
+  }
+  .levels-header-letter {
+    width: 48px; height: 48px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Syne', sans-serif;
+    font-size: 22px;
+    font-weight: 800;
+    color: var(--white);
+    flex-shrink: 0;
+  }
+  .levels-header-text h2 {
+    font-family: 'Syne', sans-serif;
+    font-size: 22px;
+    font-weight: 700;
+  }
+  .levels-header-text p {
+    font-size: 13px;
+    color: var(--grey-600);
+    margin-top: 2px;
+  }
+
+  .levels-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+  }
+  @media (max-width: 1000px) { .levels-grid { grid-template-columns: repeat(2, 1fr); } }
+
+  .level-card {
+    border-radius: 14px;
+    border: 2px solid #e5e7eb;
+    background: var(--white);
+    padding: 24px;
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s;
+    position: relative;
+    overflow: hidden;
+  }
+  .level-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 32px rgba(0,0,0,0.10);
+  }
+  .level-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 4px;
+  }
+  .view-c .level-card::before { background: var(--teal); }
+  .view-a .level-card::before { background: var(--blue); }
+  .view-r .level-card::before { background: var(--red); }
+  .view-e .level-card::before { background: var(--orange); }
+
+  .view-c .level-card:hover { border-color: var(--teal); }
+  .view-a .level-card:hover { border-color: var(--blue); }
+  .view-r .level-card:hover { border-color: var(--red); }
+  .view-e .level-card:hover { border-color: var(--orange); }
+
+  .level-num-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-family: 'Syne', sans-serif;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    margin-bottom: 12px;
+    padding: 4px 10px;
+    border-radius: 20px;
+  }
+  .view-c .level-num-badge { background: var(--teal-bg); color: var(--teal); }
+  .view-a .level-num-badge { background: var(--blue-bg); color: var(--blue); }
+  .view-r .level-num-badge { background: var(--red-bg); color: var(--red); }
+  .view-e .level-num-badge { background: var(--orange-bg); color: var(--orange); }
+
+  .level-title {
+    font-family: 'Syne', sans-serif;
+    font-size: 16px;
+    font-weight: 700;
+    margin-bottom: 8px;
+    color: var(--grey-900);
+    line-height: 1.3;
+  }
+  .level-desc {
+    font-size: 13px;
+    line-height: 1.6;
+    color: var(--grey-600);
+    margin-bottom: 16px;
+  }
+  .level-artefact-count {
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--grey-400);
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+  .level-artefact-count span {
+    font-weight: 700;
+  }
+  .view-c .level-artefact-count span { color: var(--teal); }
+  .view-a .level-artefact-count span { color: var(--blue); }
+  .view-r .level-artefact-count span { color: var(--red); }
+  .view-e .level-artefact-count span { color: var(--orange); }
+
+  /* ── VIEW 2: ARTEFACTS ── */
+  .artefacts-header {
+    margin-bottom: 28px;
+    padding: 24px 28px;
+    border-radius: 14px;
+    border-left: 5px solid;
+  }
+  .view-c .artefacts-header { background: var(--teal-bg); border-color: var(--teal); }
+  .view-a .artefacts-header { background: var(--blue-bg); border-color: var(--blue); }
+  .view-r .artefacts-header { background: var(--red-bg); border-color: var(--red); }
+  .view-e .artefacts-header { background: var(--orange-bg); border-color: var(--orange); }
+
+  .artefacts-header-level {
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    margin-bottom: 4px;
+  }
+  .view-c .artefacts-header-level { color: var(--teal); }
+  .view-a .artefacts-header-level { color: var(--blue); }
+  .view-r .artefacts-header-level { color: var(--red); }
+  .view-e .artefacts-header-level { color: var(--orange); }
+
+  .artefacts-header h2 {
+    font-family: 'Syne', sans-serif;
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--grey-900);
+    margin-bottom: 6px;
+  }
+  .artefacts-header p {
+    font-size: 14px;
+    color: var(--grey-600);
+    line-height: 1.5;
+  }
+
+  /* Checklist row */
+  .checklist-section {
+    margin-bottom: 32px;
+  }
+  .checklist-title {
+    font-family: 'Syne', sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    color: var(--grey-800);
+    margin-bottom: 12px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid #e5e7eb;
+  }
+  .checklist-items {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 20px;
+  }
+  .checklist-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 10px 14px;
+    background: var(--white);
+    border-radius: 8px;
+    border: 1px solid #e5e7eb;
+    font-size: 13px;
+    color: var(--grey-700);
+    line-height: 1.5;
+  }
+  .checklist-dot {
+    width: 18px; height: 18px;
+    border-radius: 50%;
+    border: 2px solid;
+    flex-shrink: 0;
+    margin-top: 1px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 9px;
+    color: var(--white);
+  }
+  .view-c .checklist-dot { border-color: var(--teal); }
+  .view-a .checklist-dot { border-color: var(--blue); }
+  .view-r .checklist-dot { border-color: var(--red); }
+  .view-e .checklist-dot { border-color: var(--orange); }
+
+  /* Artefacts grid */
+  .artefacts-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 14px;
+  }
+  @media (max-width: 900px) { .artefacts-grid { grid-template-columns: repeat(2, 1fr); } }
+
+  .artefact-card {
+    background: var(--white);
+    border: 2px solid #e5e7eb;
+    border-radius: 12px;
+    padding: 18px 18px 14px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    position: relative;
+  }
+  .artefact-card:hover {
+    box-shadow: 0 8px 24px rgba(0,0,0,0.10);
+    transform: translateY(-2px);
+  }
+  .view-c .artefact-card:hover { border-color: var(--teal); }
+  .view-a .artefact-card:hover { border-color: var(--blue); }
+  .view-r .artefact-card:hover { border-color: var(--red); }
+  .view-e .artefact-card:hover { border-color: var(--orange); }
+
+  .artefact-type {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 1.2px;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+    padding: 3px 8px;
+    border-radius: 6px;
+    display: inline-block;
+  }
+  .view-c .artefact-type { background: var(--teal-bg); color: var(--teal); }
+  .view-a .artefact-type { background: var(--blue-bg); color: var(--blue); }
+  .view-r .artefact-type { background: var(--red-bg); color: var(--red); }
+  .view-e .artefact-type { background: var(--orange-bg); color: var(--orange); }
+
+  .artefact-name {
+    font-family: 'Syne', sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--grey-900);
+    line-height: 1.3;
+    margin-bottom: 6px;
+  }
+  .artefact-desc-short {
+    font-size: 12px;
+    color: var(--grey-600);
+    line-height: 1.5;
+  }
+  .artefact-preview-cta {
+    margin-top: 10px;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+  .view-c .artefact-preview-cta { color: var(--teal); }
+  .view-a .artefact-preview-cta { color: var(--blue); }
+  .view-r .artefact-preview-cta { color: var(--red); }
+  .view-e .artefact-preview-cta { color: var(--orange); }
+
+  /* ── KPI STRIP ── */
+  .kpi-strip {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    margin-bottom: 28px;
+  }
+  .kpi-item {
+    background: var(--white);
+    border-radius: 12px;
+    border: 1px solid #e5e7eb;
+    padding: 16px 20px;
+  }
+  .kpi-label {
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.5px;
+    color: var(--grey-400);
+    margin-bottom: 4px;
+    text-transform: uppercase;
+  }
+  .kpi-value {
+    font-family: 'Syne', sans-serif;
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--grey-900);
+  }
+
+  /* ── MODAL ── */
+  .modal-overlay {
+    position: fixed; inset: 0;
+    background: rgba(17,24,39,0.65);
+    backdrop-filter: blur(4px);
+    z-index: 100;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+  }
+  .modal-overlay.open { display: flex; animation: fadeIn 0.2s ease; }
+  @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+  .modal {
+    background: var(--white);
+    border-radius: 20px;
+    max-width: 600px;
+    width: 100%;
+    max-height: 85vh;
+    overflow-y: auto;
+    box-shadow: 0 32px 80px rgba(0,0,0,0.25);
+    animation: slideUp 0.25s ease;
+  }
+  @keyframes slideUp {
+    from { transform: translateY(20px); opacity: 0; }
+    to   { transform: translateY(0); opacity: 1; }
+  }
+
+  .modal-header {
+    padding: 28px 28px 20px;
+    border-bottom: 1px solid #f0f0f0;
+    position: relative;
+  }
+  .modal-type {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+  .modal-title {
+    font-family: 'Syne', sans-serif;
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--grey-900);
+    line-height: 1.3;
+    padding-right: 32px;
+  }
+  .modal-close {
+    position: absolute;
+    top: 24px; right: 24px;
+    width: 32px; height: 32px;
+    border-radius: 50%;
+    background: var(--grey-100);
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+    display: flex; align-items: center; justify-content: center;
+    color: var(--grey-600);
+    transition: background 0.2s;
+  }
+  .modal-close:hover { background: #e5e7eb; }
+
+  .modal-body {
+    padding: 24px 28px 28px;
+  }
+  .modal-section-title {
+    font-family: 'Syne', sans-serif;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--grey-400);
+    margin-bottom: 10px;
+    margin-top: 20px;
+  }
+  .modal-section-title:first-child { margin-top: 0; }
+  .modal-desc {
+    font-size: 14px;
+    line-height: 1.7;
+    color: var(--grey-700);
+    margin-bottom: 4px;
+  }
+  .modal-content-rows {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .modal-content-row {
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+    font-size: 13px;
+    color: var(--grey-700);
+    line-height: 1.5;
+  }
+  .modal-row-icon {
+    flex-shrink: 0;
+    margin-top: 2px;
+    font-size: 14px;
+  }
+  .modal-footer {
+    padding: 16px 28px 24px;
+    display: flex;
+    gap: 10px;
+  }
+  .modal-btn {
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 600;
+    border: none;
+    cursor: pointer;
+    transition: opacity 0.2s;
+    font-family: 'DM Sans', sans-serif;
+  }
+  .modal-btn:hover { opacity: 0.85; }
+  .modal-btn-primary { color: var(--white); }
+  .modal-btn-secondary {
+    background: var(--grey-100);
+    color: var(--grey-700);
+  }
+
+  /* ── BACK BUTTON ── */
+  .back-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--grey-600);
+    cursor: pointer;
+    margin-bottom: 24px;
+    padding: 8px 0;
+    border: none;
+    background: none;
+    transition: color 0.2s;
+    font-family: 'DM Sans', sans-serif;
+  }
+  .back-btn:hover { color: var(--grey-900); }
+
+  /* ── FOOTER ── */
+  .footer {
+    background: var(--grey-900);
+    padding: 20px 40px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .footer-text {
+    font-size: 12px;
+    color: var(--grey-400);
+  }
+  .footer-text strong { color: var(--teal-light); }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="header">
+  <div class="header-left">
+    <div class="header-eyebrow">City of Port Phillip · AI Governance</div>
+    <div class="header-title"><span>C.A.R.E.</span> Framework</div>
+    <div class="header-sub">Council AI Readiness &amp; Enablement — Interactive Explorer</div>
+  </div>
+  <div class="header-badge">
+    <div class="badge-pill">4 Enablers</div>
+    <div class="badge-pill">L1 – L4 Maturity</div>
+    <div class="badge-pill">Governance by Design</div>
+  </div>
+</div>
+
+<!-- BREADCRUMB -->
+<div class="breadcrumb-bar" id="breadcrumb">
+  <span class="breadcrumb-item active" onclick="goHome()">Framework</span>
+</div>
+
+<!-- MAIN -->
+<div class="main">
+
+  <!-- VIEW 0: HOME -->
+  <div class="view active" id="view-home">
+    <div class="section-label">Select an enabler to explore maturity levels and artefacts</div>
+    <div class="enabler-grid">
+
+      <div class="enabler-card c" onclick="openEnabler('c')">
+        <div class="enabler-arrow">→</div>
+        <div class="enabler-letter">C</div>
+        <div class="enabler-name">Conscious</div>
+        <div class="enabler-full">Governance</div>
+        <div class="enabler-tagline">Transparent, accountable AI use — every use case has a defined purpose, owner, and decision accountability. Fairness, bias and impact reviewed before deployment.</div>
+        <div class="enabler-meta">
+          <span class="meta-chip">AI Policy</span>
+          <span class="meta-chip">Ethics &amp; Bias</span>
+          <span class="meta-chip">Risk Controls</span>
+          <span class="meta-chip">Accountability</span>
+        </div>
+      </div>
+
+      <div class="enabler-card a" onclick="openEnabler('a')">
+        <div class="enabler-arrow">→</div>
+        <div class="enabler-letter">A</div>
+        <div class="enabler-name">Applied</div>
+        <div class="enabler-full">Value</div>
+        <div class="enabler-tagline">Targeted, measurable, responsible outcomes — AI focused on high-value service improvements. Ethical, evidence-based use over broad or speculative rollout.</div>
+        <div class="enabler-meta">
+          <span class="meta-chip">Service Design</span>
+          <span class="meta-chip">Benefits Realisation</span>
+          <span class="meta-chip">Use Case Mgmt</span>
+        </div>
+      </div>
+
+      <div class="enabler-card r" onclick="openEnabler('r')">
+        <div class="enabler-arrow">→</div>
+        <div class="enabler-letter">R</div>
+        <div class="enabler-name">Ready</div>
+        <div class="enabler-full">Workforce</div>
+        <div class="enabler-tagline">Capable, confident and accountable staff — trained to use AI safely, responsibly and with professional judgement. Leaders empowered to question and validate AI outputs.</div>
+        <div class="enabler-meta">
+          <span class="meta-chip">Capability Building</span>
+          <span class="meta-chip">Change Mgmt</span>
+          <span class="meta-chip">AI Literacy</span>
+        </div>
+      </div>
+
+      <div class="enabler-card e" onclick="openEnabler('e')">
+        <div class="enabler-arrow">→</div>
+        <div class="enabler-letter">E</div>
+        <div class="enabler-name">Enabling</div>
+        <div class="enabler-full">Technology</div>
+        <div class="enabler-tagline">Secure, private and sustainable foundations — privacy, data protection and cyber security embedded by design. AI within governed, risk-managed, energy-aware environments.</div>
+        <div class="enabler-meta">
+          <span class="meta-chip">Data Governance</span>
+          <span class="meta-chip">Cybersecurity</span>
+          <span class="meta-chip">Infrastructure</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- VIEW 1: LEVELS -->
+  <div class="view" id="view-levels">
+    <button class="back-btn" onclick="goHome()">← Back to Framework</button>
+    <div class="levels-header">
+      <div class="levels-header-letter" id="lh-letter"></div>
+      <div class="levels-header-text">
+        <h2 id="lh-title"></h2>
+        <p id="lh-sub"></p>
+      </div>
+    </div>
+    <div class="section-label">Select a maturity level</div>
+    <div class="levels-grid" id="levels-grid"></div>
+  </div>
+
+  <!-- VIEW 2: ARTEFACTS -->
+  <div class="view" id="view-artefacts">
+    <button class="back-btn" id="artefacts-back">← Back to Levels</button>
+    <div class="artefacts-header" id="artefacts-header">
+      <div class="artefacts-header-level" id="ah-level"></div>
+      <h2 id="ah-title"></h2>
+      <p id="ah-desc"></p>
+    </div>
+    <div class="kpi-strip" id="kpi-strip"></div>
+    <div class="section-label">Checklist &amp; Key Artefacts</div>
+    <div class="checklist-section">
+      <div class="checklist-title">What good looks like at this level</div>
+      <div class="checklist-items" id="checklist-items"></div>
+    </div>
+    <div class="section-label">Artefacts — click to preview</div>
+    <div class="artefacts-grid" id="artefacts-grid"></div>
+  </div>
+
+</div>
+
+<!-- FOOTER -->
+<div class="footer">
+  <div class="footer-text">City of Port Phillip &nbsp;·&nbsp; <strong>C.A.R.E. Framework</strong> &nbsp;·&nbsp; Council AI Readiness &amp; Enablement</div>
+  <div class="footer-text">Human in the loop &nbsp;·&nbsp; Risk-based controls &nbsp;·&nbsp; Privacy and fairness by design</div>
+</div>
+
+<!-- MODAL -->
+<div class="modal-overlay" id="modal-overlay" onclick="closeModal(event)">
+  <div class="modal" id="modal">
+    <div class="modal-header">
+      <div class="modal-type" id="modal-type"></div>
+      <div class="modal-title" id="modal-title"></div>
+      <button class="modal-close" onclick="closeModalDirect()">✕</button>
+    </div>
+    <div class="modal-body" id="modal-body"></div>
+    <div class="modal-footer" id="modal-footer"></div>
+  </div>
+</div>
+
+<script>
+const ENABLERS = {
+  c: {
+    letter: 'C',
+    name: 'Conscious Governance',
+    sub: 'Transparent, accountable AI use across all council operations',
+    color: '#1a8c7e',
+    bgColor: '#e6f5f3',
+    levels: [
+      {
+        code: 'L1', title: 'Policy Foundations',
+        desc: 'AI policy exists but is largely aspirational. Governance structures are nascent. Individual accountability for AI decisions is unclear.',
+        checklist: [
+          'Draft AI Policy or AI Principles document endorsed by ELT',
+          'At least one designated AI governance contact or champion identified',
+          'Basic risk register includes AI as an emerging risk category',
+          'Staff aware that AI tools require approval before operational use',
+          'Procurement checklists reference data sovereignty and privacy basics'
+        ],
+        kpis: [
+          { label: 'AI Policy in Place', value: 'Draft' },
+          { label: 'Governance Owner', value: 'Assigned' },
+          { label: 'Use Cases Registered', value: '<5' }
+        ],
+        artefacts: [
+          { type: 'Policy', name: 'AI Principles & Policy Framework', desc: 'Council-endorsed statement of AI principles, scope, and governance ownership. Sets the tone and intent for responsible AI adoption.', content: ['Defines AI scope — what counts as AI/ML under this policy', 'States guiding principles: transparency, fairness, human oversight', 'Names the governance owner (CIIO or delegate)', 'References applicable legislation: Privacy Act, FOI, Equal Opportunity Act', 'Approved by ELT — living document with annual review cycle'] },
+          { type: 'Register', name: 'AI Use Case Register (Seed)', desc: 'Lightweight register capturing all active and proposed AI tool deployments. The starting point for portfolio visibility.', content: ['Tool name, vendor, purpose, and business unit', 'Data inputs and whether personal information is involved', 'Approval status and review date', 'Human oversight mechanism noted', 'Export-ready for audit or ELT briefing'] },
+          { type: 'Template', name: 'AI Procurement Checklist', desc: 'Checklist embedded in standard procurement templates to catch AI-enabled products early in the sourcing process.', content: ['Does the solution use AI/ML to make or support decisions?', 'What data does it process — is it identifiable or sensitive?', 'Where is data stored — onshore, offshore, cloud provider?', 'Can algorithmic decisions be explained to affected residents?', 'Does vendor have a responsible AI or ethics policy?'] }
+        ]
+      },
+      {
+        code: 'L2', title: 'Governed Practice',
+        desc: 'Governance structures formalised. AI decisions are traceable. Risk and ethics assessments run routinely for new deployments.',
+        checklist: [
+          'AI Governance Committee or equivalent meets at least quarterly',
+          'Algorithmic Impact Assessment (AIA) process in place for medium/high-risk tools',
+          'All active AI tools are registered with assigned business owners',
+          'Incident or error log for AI-related issues exists and is reviewed',
+          'AI governance embedded in project delivery methodology (e.g. OneCouncil change process)'
+        ],
+        kpis: [
+          { label: 'Registered Use Cases', value: '10–25' },
+          { label: 'AIA Completion Rate', value: '>80%' },
+          { label: 'Governance Cadence', value: 'Quarterly' }
+        ],
+        artefacts: [
+          { type: 'Framework', name: 'Algorithmic Impact Assessment (AIA)', desc: 'Structured assessment run before deploying any AI tool that touches service delivery or decision-making affecting residents or staff.', content: ['Risk tiering: low / medium / high / critical', 'Bias and fairness review — who could be disadvantaged?', 'Data lineage and quality assessment', 'Human-in-the-loop design requirement for medium+ risk', 'Sign-off by business owner, privacy lead, and CIIO'] },
+          { type: 'Process', name: 'AI Governance Committee Charter', desc: 'Charter defining the composition, mandate, meeting cadence, and decision rights of the AI Governance Committee.', content: ['Membership: CIIO (chair), CFO, legal/privacy, People & Culture, service leads', 'Decision rights: approve new deployments, review incidents, endorse policy changes', 'Quorum and escalation thresholds', 'Reporting line to CEO/ELT and Council', 'Annual terms of reference review'] },
+          { type: 'Register', name: 'AI Incident & Exception Log', desc: 'Operational log tracking AI errors, unintended outputs, near-misses, and exceptions. Feeds into quarterly governance review.', content: ['Date, tool, business unit, and incident description', 'Severity classification (1–4)', 'Immediate action taken and root cause', 'Resolution and lessons learned', 'Trend analysis reviewed quarterly by governance committee'] }
+        ]
+      },
+      {
+        code: 'L3', title: 'Embedded Accountability',
+        desc: 'Governance is integrated into council culture. Ethics reviews are standard. Residents can access information on how AI is used in decisions affecting them.',
+        checklist: [
+          'Public AI transparency statement published on Council website',
+          'Ethics review panel includes external independent member',
+          'Residents can submit queries/complaints about AI-influenced decisions',
+          'AI risk appetite formally documented and approved by Council',
+          'Annual AI governance maturity review conducted and reported to Council'
+        ],
+        kpis: [
+          { label: 'Public Transparency', value: 'Published' },
+          { label: 'External Ethics Member', value: 'Active' },
+          { label: 'Resident Complaints Path', value: 'Live' }
+        ],
+        artefacts: [
+          { type: 'Publication', name: 'AI Transparency Statement (Public)', desc: 'Plain-language public document explaining how Council uses AI, what safeguards are in place, and how residents can ask questions or raise concerns.', content: ['What AI tools Council uses and why', 'How decisions affecting residents are reviewed by humans', 'What data is used and how it is protected', 'How residents can seek review of an AI-influenced decision', 'Reviewed annually — last updated date visible'] },
+          { type: 'Policy', name: 'AI Risk Appetite Statement', desc: 'Formal statement approved by Council defining acceptable and unacceptable uses of AI across service domains.', content: ['Risk appetite by domain: enforcement, planning, community services, internal ops', 'Prohibited use cases (zero tolerance): autonomous enforcement issuance, identity decisions without human review', 'Threshold triggers for escalation to Council', 'Aligned to Council Plan and Community Vision', 'Annual review cycle with ELT endorsement'] },
+          { type: 'Process', name: 'Resident AI Review Pathway', desc: 'Documented process by which residents can request human review of any decision in which AI played a material role.', content: ['Accessible via Council website, phone, and service centres', 'Acknowledgement within 5 business days', 'Human review completed within 20 business days', 'Outcome notification with plain-language explanation', 'Data on pathway usage reported to governance committee'] }
+        ]
+      },
+      {
+        code: 'L4', title: 'Adaptive Governance',
+        desc: 'Governance dynamically adapts to emerging AI capabilities. Council is a recognised sector leader. Real-time monitoring and continuous assurance in place.',
+        checklist: [
+          'Continuous AI monitoring dashboard active for all production AI tools',
+          'Council contributes to sector-wide AI governance standards (MAV, LGPro, AIIA)',
+          'Automated drift/bias detection triggers governance review within 48hrs',
+          'AI governance integrated into internal audit and assurance program',
+          'C.A.R.E. maturity reassessed annually and published'
+        ],
+        kpis: [
+          { label: 'Monitoring Coverage', value: '100%' },
+          { label: 'Drift Alert SLA', value: '48 hrs' },
+          { label: 'Sector Contributions', value: 'Active' }
+        ],
+        artefacts: [
+          { type: 'Dashboard', name: 'AI Governance Monitoring Dashboard', desc: 'Live executive dashboard showing AI tool health, governance status, incident trends, and assurance coverage across all deployments.', content: ['Real-time status per tool: active, under review, paused, retired', 'Open incidents and overdue reviews surfaced', 'AIA pipeline: upcoming, in progress, completed', 'Drift alerts from monitoring tools integrated', 'ELT-ready view: RAG status and recommended actions'] },
+          { type: 'Report', name: 'Annual AI Maturity & Assurance Report', desc: 'Formal annual report to Council documenting AI governance maturity progress, incidents, benefits realised, and the forward roadmap.', content: ['C.A.R.E. maturity level vs. prior year across all four enablers', 'Use cases deployed, retired, and in pipeline', 'Incident summary and lessons learned', 'Benefits and value delivered (linked to Applied enabler)', 'Priorities and investment for the year ahead'] },
+          { type: 'Framework', name: 'Sector Leadership Contribution Package', desc: 'Shareable artefacts and position papers contributed to MAV, AIIA, or LGPro to help establish sector-wide AI governance standards.', content: ['C.A.R.E. framework summary for peer councils', 'AIA template packaged for sector use', 'Case study: Port Phillip\'s Copilot governance journey', 'Position paper on agentic AI risk in local government', 'Conference presentation / workshop facilitation guide'] }
+        ]
+      }
+    ]
+  },
+  a: {
+    letter: 'A',
+    name: 'Applied Value',
+    sub: 'Targeted, measurable outcomes — AI focused on high-value service improvements',
+    color: '#1e6fa8',
+    bgColor: '#e3f0f9',
+    levels: [
+      {
+        code: 'L1', title: 'Ad Hoc Exploration',
+        desc: 'AI pilots underway but without structured benefit cases or value measurement. Use cases are opportunistic rather than strategically selected.',
+        checklist: [
+          'At least one AI pilot or proof of concept completed',
+          'Business sponsor identified for each pilot',
+          'Basic user feedback collected post-pilot',
+          'High-level benefit hypothesis documented (even if unmeasured)',
+          'Lessons learned captured and shared within the team'
+        ],
+        kpis: [
+          { label: 'Active Pilots', value: '1–3' },
+          { label: 'Benefits Measured', value: 'Informal' },
+          { label: 'Strategic Alignment', value: 'Partial' }
+        ],
+        artefacts: [
+          { type: 'Template', name: 'AI Use Case Hypothesis Canvas', desc: 'Lightweight one-page canvas to capture the benefit hypothesis, user need, and risk consideration before committing to a pilot.', content: ['Problem statement: what service gap are we solving?', 'AI solution hypothesis: how does AI address this?', 'Expected benefit: time saved, quality improved, cost reduced', 'Who benefits: staff / residents / both?', 'Known risks and mitigations at hypothesis stage'] },
+          { type: 'Template', name: 'Pilot Wrap-Up Report', desc: 'Structured post-pilot report capturing outcomes, user feedback, readiness for scale, and a go/no-go recommendation.', content: ['Pilot objectives vs. outcomes achieved', 'Quantitative results (where measurable)', 'User feedback themes (staff and/or resident)', 'Governance and risk observations', 'Recommendation: proceed, iterate, or close — with rationale'] },
+          { type: 'Register', name: 'AI Opportunity Backlog', desc: 'Living register of AI opportunities identified across the organisation, prioritised for structured assessment and development.', content: ['Opportunity name, proposer, and service area', 'Problem it solves and rough value estimate', 'Feasibility: data available, vendor capability, complexity', 'Priority tier: Horizon 1 / 2 / 3', 'Review date and current status'] }
+        ]
+      },
+      {
+        code: 'L2', title: 'Structured Delivery',
+        desc: 'AI investments governed by business cases with measurable KPIs. Portfolio approach to use case management. Benefits tracked through delivery lifecycle.',
+        checklist: [
+          'AI business case template in use for all funded AI initiatives',
+          'Benefits realisation tracked at 3, 6, and 12 months post-deployment',
+          'Use case selection criteria applied (strategic fit, value, risk, feasibility)',
+          'Service owners accountable for AI performance within their domain',
+          'Quarterly portfolio review by CIIO or delegate'
+        ],
+        kpis: [
+          { label: 'Funded Use Cases', value: '5–15' },
+          { label: 'Benefits Tracking', value: 'Structured' },
+          { label: 'Portfolio Reviews', value: 'Quarterly' }
+        ],
+        artefacts: [
+          { type: 'Template', name: 'AI Business Case Template', desc: 'Standard business case format for AI investments aligned to Council\'s existing investment approval framework.', content: ['Strategic alignment to Council Plan and ICT Strategy', 'Options analysis: AI vs. non-AI approaches', 'Cost model: implementation, licensing, ongoing, and transition costs', 'Benefits: quantified (FTE, $, time) and qualitative', 'Risk assessment and recommended governance controls'] },
+          { type: 'Framework', name: 'Use Case Prioritisation Matrix', desc: 'Decision matrix applying weighted criteria to rank and sequence AI use cases across the portfolio.', content: ['Criteria: strategic value, resident impact, operational efficiency, risk, feasibility', 'Weighting agreed by ELT or AI Governance Committee', 'Scored view: heat map of the portfolio', 'Horizon segmentation: now / next / later', 'Refresh cadence: aligned to budget cycle'] },
+          { type: 'Report', name: 'Benefits Realisation Tracker', desc: 'Ongoing tracking tool measuring actual vs. expected benefits for each deployed AI tool over a 12-month window.', content: ['Baseline metric captured pre-deployment', 'KPI targets set at business case approval', 'Actual performance at 3, 6, 12 months', 'Variance explanation and trend annotation', 'RAG status per use case surfaced to CIIO monthly'] }
+        ]
+      },
+      {
+        code: 'L3', title: 'Value-Led Scaling',
+        desc: 'Proven use cases scaled across service units. Value chain analysis informs where AI creates most impact. Resident-facing AI delivers measurable service improvements.',
+        checklist: [
+          'AI service value chain map maintained showing impact points across council services',
+          'At least one resident-facing AI tool live with measurable satisfaction data',
+          'Human-time dividend tracked and reported (hours freed, reinvested in value)',
+          'AI benefits inform annual budget bids and service reviews',
+          'Service redesign incorporates AI capabilities from discovery phase'
+        ],
+        kpis: [
+          { label: 'Live Service AI Tools', value: '5+' },
+          { label: 'Resident Satisfaction Δ', value: 'Measured' },
+          { label: 'Human-Time Dividend', value: 'Reported' }
+        ],
+        artefacts: [
+          { type: 'Framework', name: 'AI Service Value Chain Map', desc: 'Visual map showing where AI intersects the full Council service value chain — from resident engagement to back-office processing.', content: ['Service domains mapped: planning, permits, customer, community, operations', 'AI intervention points highlighted: GenAI, Agentic, Decision-support', 'Current state vs. AI-augmented future state per domain', 'Value quantification: time, cost, quality', 'Input to ICT Strategy and Digital Roadmap'] },
+          { type: 'Report', name: 'Human-Time Dividend Report', desc: 'Quarterly report quantifying time freed by AI tools and demonstrating reinvestment of that time into higher-value resident-facing activity.', content: ['Hours freed per tool and per service unit', 'What that time has been reinvested in (narrative and metrics)', 'Staff survey: is AI helping or adding burden?', 'Leadership commentary on quality of reinvestment', 'Trend: cumulative dividend since AI program inception'] },
+          { type: 'Process', name: 'AI-Integrated Service Design Guide', desc: 'Guide for service designers ensuring AI capabilities are considered from discovery, not retrofitted late in the design process.', content: ['When to consider AI: problem type indicators', 'How to frame the AI hypothesis in the discovery brief', 'Resident co-design principles for AI-augmented services', 'Handoff to technology delivery: from design to AIA', 'Examples: Chatsimple, Copilot Chat, predictive maintenance use cases'] }
+        ]
+      },
+      {
+        code: 'L4', title: 'Optimised Impact',
+        desc: 'AI portfolio continuously optimised for maximum community and organisational value. Agentic AI in production. Dynamic investment reallocation based on live performance data.',
+        checklist: [
+          'Agentic AI use cases live with human oversight frameworks operational',
+          'Real-time portfolio performance visible to CIIO and service directors',
+          'AI investment reallocated dynamically based on value performance data',
+          'Community impact of AI programs externally verified or benchmarked',
+          'Council recognised as a sector exemplar for AI value realisation'
+        ],
+        kpis: [
+          { label: 'Agentic Use Cases', value: 'Live' },
+          { label: 'Portfolio ROI', value: 'Real-time' },
+          { label: 'Sector Recognition', value: 'Active' }
+        ],
+        artefacts: [
+          { type: 'Dashboard', name: 'AI Portfolio Performance Dashboard', desc: 'Real-time executive view of the full AI portfolio — value delivered, cost, health, and strategic alignment — updated continuously.', content: ['Portfolio-level ROI and cumulative benefit delivered', 'Per-use-case: live KPIs, trend, RAG status', 'Investment vs. benefit: dynamic view', 'Agentic AI operations panel: active agents, oversight status, volume', 'Alerting: performance degradation or governance issues surfaced immediately'] },
+          { type: 'Framework', name: 'Agentic AI Operating Model', desc: 'Governance and operational framework for running agentic AI — AI that takes actions, not just generates outputs — safely at scale.', content: ['Agent taxonomy: what types of agents are in production?', 'Human oversight controls per agent type and risk tier', 'Failure mode catalogue and response playbook', 'Audit trail requirements for agent actions', 'Review cadence: daily monitoring, weekly health check, quarterly governance review'] },
+          { type: 'Report', name: 'Community Impact Assessment — AI Programs', desc: 'Annual external-facing report assessing the net community benefit of Council\'s AI program against equity, access, and service quality dimensions.', content: ['Service improvement outcomes: speed, quality, access', 'Equity lens: has AI improved or reduced equitable access to services?', 'Resident and community voice: survey and engagement findings', 'Unintended consequences identified and addressed', 'Comparison to sector benchmarks and OECD AI principles alignment'] }
+        ]
+      }
+    ]
+  },
+  r: {
+    letter: 'R',
+    name: 'Ready Workforce',
+    sub: 'Capable, confident, accountable staff — trained to use AI with professional judgement',
+    color: '#9b2335',
+    bgColor: '#f7e8ea',
+    levels: [
+      {
+        code: 'L1', title: 'Awareness Building',
+        desc: 'Staff know AI is being adopted. Basic AI literacy content available. No structured pathway yet. Leaders beginning to understand their accountability role.',
+        checklist: [
+          'AI literacy awareness communication issued to all staff',
+          'At least one all-staff AI information session delivered',
+          'Manager briefing on AI tool approval responsibilities completed',
+          'AI FAQ or intranet resource page live',
+          'People & Culture engaged on AI workforce implications'
+        ],
+        kpis: [
+          { label: 'Staff Awareness', value: 'Communicated' },
+          { label: 'Manager Briefings', value: 'Completed' },
+          { label: 'Literacy Resources', value: 'Basic' }
+        ],
+        artefacts: [
+          { type: 'Communication', name: 'AI Awareness Communications Pack', desc: 'Staff-ready communications package covering what AI is, what Council is doing, and what it means for how people work.', content: ['All-staff email series: 3 editions over 6 weeks', 'Intranet landing page: What is AI? What tools do we use? How do I get help?', 'Manager briefing deck: your accountability role in AI', 'FAQ: 15 most common staff questions answered plainly', 'Tone: reassuring, honest, people-first — not hype'] },
+          { type: 'Guide', name: 'Safe AI Use Quick Reference Guide', desc: 'One-page laminated/digital reference for staff on what they can and can\'t do with AI tools at work.', content: ['Approved tools list: what\'s cleared for use right now', 'What NOT to put into AI tools: personal data, confidential content, legal advice requests', 'How to report a concern or unexpected AI output', 'Human review required: when to pause and escalate', 'Contact: who to call if unsure (AI governance champion)'] },
+          { type: 'Template', name: 'Manager AI Accountability Briefing Deck', desc: 'Facilitated briefing deck for people leaders covering their accountability obligations when their team uses AI tools.', content: ['What AI tools are approved for your team\'s use', 'Your responsibility: you are accountable for AI-assisted outputs', 'How to spot an AI error or bias in team work', 'How to support staff who are uncertain or resistant', 'Escalation path: who to contact for complex situations'] }
+        ]
+      },
+      {
+        code: 'L2', title: 'Capability Pathways',
+        desc: 'Structured learning pathways by role type. AI competency frameworks in place. Leaders can demonstrate and model responsible AI use.',
+        checklist: [
+          'AI competency framework defined with role-based proficiency levels',
+          'Learning pathways available for at least three role clusters (operational, professional, leadership)',
+          'Onboarding program includes AI literacy module',
+          'People leaders assessed against AI accountability competency',
+          'AI champions network established across directorates'
+        ],
+        kpis: [
+          { label: 'Staff Trained', value: '>50%' },
+          { label: 'Role Pathways', value: '3+' },
+          { label: 'Champions Active', value: 'Per directorate' }
+        ],
+        artefacts: [
+          { type: 'Framework', name: 'AI Competency Framework', desc: 'Role-based competency framework defining AI literacy expectations across five proficiency levels from Aware to Expert.', content: ['5 levels: Aware / Informed / Practitioner / Specialist / Expert', 'Role clusters: Operational, Professional, Technical, Leadership, Executive', 'Competency domains: AI literacy, responsible use, prompt quality, critical evaluation, governance', 'Assessment method per level', 'Integration with People & Culture performance frameworks'] },
+          { type: 'Program', name: 'AI Learning Pathway Guides', desc: 'Role-tailored learning pathway documents mapping development activities, tools, and milestones for each role cluster.', content: ['Pathway for Operational Staff: AI-assisted service tools, safe use, spotting errors', 'Pathway for Professional Staff: Copilot, research, drafting, analysis — with validation habits', 'Pathway for Leaders: accountability, setting team norms, recognising AI-influenced outputs', 'Duration, format, and delivery method per module', 'Linked to performance development conversations'] },
+          { type: 'Process', name: 'AI Champions Network Charter', desc: 'Charter establishing a peer-to-peer AI champions network — distributed across directorates to build capability from within.', content: ['Champion role: not the IT help desk — a trusted peer resource and feedback channel', 'Selection: volunteer, endorsed by director, CIIO-briefed', 'Responsibilities: attend monthly champions circle, share learnings, surface blockers', 'Recognition: visible, named in communications, career development support', 'Reporting: champions provide monthly pulse to CIIO on sentiment and barriers'] }
+        ]
+      },
+      {
+        code: 'L3', title: 'Confident Practice',
+        desc: 'AI is embedded in how staff do their work. Professional judgement around AI outputs is normalised. Leaders actively model responsible AI use and accountability.',
+        checklist: [
+          'Majority of staff have completed foundational AI literacy pathway',
+          'Professional judgement checkpoints embedded in high-stakes AI-assisted workflows',
+          'AI use referenced in recruitment position descriptions as an expected competency',
+          'Regular AI capability measurement and gap analysis conducted',
+          'Case studies of responsible AI use shared internally'
+        ],
+        kpis: [
+          { label: 'Pathway Completion', value: '>75%' },
+          { label: 'PD AI References', value: 'Standard' },
+          { label: 'Judgement Checkpoints', value: 'Embedded' }
+        ],
+        artefacts: [
+          { type: 'Process', name: 'AI-Assisted Workflow Standards', desc: 'Standards defining how professional judgement is exercised at key decision points in AI-assisted workflows — particularly for resident-facing outputs.', content: ['Workflow map: where AI assists vs. where human decides', 'Review checkpoint triggers: risk level, novelty, personal impact', 'Documentation standard: how to record that human review occurred', 'Escalation: when to involve senior officer or manager', 'Examples by service area: planning, customer service, enforcement, finance'] },
+          { type: 'Framework', name: 'AI Capability Measurement Framework', desc: 'Annual measurement approach assessing workforce AI capability against the competency framework, surfacing gaps and informing the learning program.', content: ['Annual survey: self-assessed and manager-assessed competency ratings', 'Pathway completion data from LMS', 'Incident analysis: AI errors traced to capability gaps', 'Gap analysis output: priority areas for the year ahead', 'Reported to ELT and People & Culture leadership'] },
+          { type: 'Guide', name: 'AI Use Cases — Internal Story Library', desc: 'Curated library of anonymised internal case studies showing how staff are using AI responsibly and effectively — building confidence and cultural permission.', content: ['Format: 1-page story — challenge, AI approach, outcome, lesson', 'Published quarterly on intranet', 'Nominated by champions and managers', 'Balanced: shows successes AND examples of human override/correction', 'Builds social proof for responsible AI adoption'] }
+        ]
+      },
+      {
+        code: 'L4', title: 'Future-Ready Organisation',
+        desc: 'Council is an employer of choice for AI-capable talent. Workforce continuously adapts to emerging AI capabilities. Staff are active participants in AI governance and improvement.',
+        checklist: [
+          'AI capability is a differentiator in talent attraction and employer branding',
+          'Staff contribute to AI governance through structured feedback loops',
+          'Emerging roles (AI reviewer, prompt engineer, data steward) formally recognised',
+          'External recognition of Council as a workforce AI capability leader',
+          'Continuous learning model — workforce adapts to new AI tools within weeks not months'
+        ],
+        kpis: [
+          { label: 'AI Talent Retention', value: 'Above sector' },
+          { label: 'Staff Feedback Loops', value: 'Structured' },
+          { label: 'New Role Recognition', value: 'Formalised' }
+        ],
+        artefacts: [
+          { type: 'Framework', name: 'AI Workforce Evolution Roadmap', desc: 'Strategic roadmap forecasting how AI will reshape roles, skills, and team structures at Council over a 3-year horizon.', content: ['Role impact analysis: augmented / transformed / new / reduced', 'Skills shift map: from current to AI-era competencies', 'Transition support commitments: retraining, redeployment, pathways', 'New role designs: AI Reviewer, Data Steward, Prompt Specialist', 'Endorsed by ELT; reviewed annually and when significant AI capability shifts occur'] },
+          { type: 'Process', name: 'Staff AI Feedback & Improvement Loop', desc: 'Structured mechanism for staff to flag AI tool issues, improvement ideas, and concerns — feeding directly into governance and vendor management.', content: ['Submission: simple form on intranet, accessible via champions', 'Categories: error/risk, improvement idea, usability, concern', 'Triage: reviewed weekly by CIIO team', 'Feedback to submitter: acknowledged within 5 days, outcome within 30', 'Aggregated themes reported to AI Governance Committee quarterly'] },
+          { type: 'Report', name: 'Employer of Choice — AI Capability Profile', desc: 'External-facing profile of Council\'s AI workforce capability for talent attraction, partnership, and sector leadership purposes.', content: ['AI tools and capability investment summary', 'Learning program highlights and staff development stats', 'New roles and career pathways available', 'Culture statement: human-first, AI-enabled — what it\'s like to work here', 'Used in recruitment campaigns, award submissions, and sector publications'] }
+        ]
+      }
+    ]
+  },
+  e: {
+    letter: 'E',
+    name: 'Enabling Technology',
+    sub: 'Secure, private, sustainable foundations — privacy and cybersecurity embedded by design',
+    color: '#c96a14',
+    bgColor: '#fdf0e3',
+    levels: [
+      {
+        code: 'L1', title: 'Basic Infrastructure',
+        desc: 'Core digital infrastructure in place. AI tools deployed on ad hoc basis. Data quality and security practices exist but are not AI-specific.',
+        checklist: [
+          'Cloud infrastructure meets minimum security baseline (ISO 27001 or equivalent)',
+          'Data classification policy in place and communicated',
+          'Vendor contracts include basic data protection clauses',
+          'AI tools only deployed through approved IT channels',
+          'Security review included in new AI tool onboarding'
+        ],
+        kpis: [
+          { label: 'Security Baseline', value: 'Certified' },
+          { label: 'Data Classification', value: 'In place' },
+          { label: 'AI Onboarding', value: 'IT-gated' }
+        ],
+        artefacts: [
+          { type: 'Policy', name: 'Data Classification Policy (AI-Ready)', desc: 'Data classification policy updated to address AI-specific data handling requirements — including what can and cannot be input into AI tools.', content: ['Classification tiers: Public / Internal / Confidential / Restricted', 'AI-specific rules per tier: what can be processed by external AI tools', 'Personal information handling rules for AI context', 'Practical examples by data type and service area', 'Annual review; updated when new AI tools are onboarded'] },
+          { type: 'Process', name: 'AI Tool Security Review Process', desc: 'Standardised IT security review process applied to every AI tool before it is approved for Council use.', content: ['Vendor security questionnaire: SOC 2, ISO 27001, data residency', 'Data flow mapping: what data moves where during AI processing', 'Privacy impact check: does tool process personal information?', 'Integration security: API, SSO, MFA requirements', 'Sign-off required before IT will provision access'] },
+          { type: 'Register', name: 'Approved AI Tools Register', desc: 'Single source of truth listing all AI tools that have passed security review and are cleared for use, with conditions noted.', content: ['Tool name, vendor, purpose, and approved user groups', 'Data allowed: classification levels cleared for input', 'Conditions of approval: e.g. no personal info, no resident data', 'Approval date and review date', 'Publicly accessible version available for staff transparency'] }
+        ]
+      },
+      {
+        code: 'L2', title: 'Governed Architecture',
+        desc: 'AI technology decisions governed by architecture principles. Data governance frameworks in place. Privacy-by-design embedded in AI deployments.',
+        checklist: [
+          'Enterprise AI architecture principles documented and applied',
+          'Privacy Impact Assessment (PIA) mandatory for all AI tools handling personal data',
+          'Data lineage tracked for data feeding AI models or tools',
+          'Security incident response plan updated to include AI-specific scenarios',
+          'AI tools included in vulnerability management and patch schedule'
+        ],
+        kpis: [
+          { label: 'PIA Completion', value: '100% required' },
+          { label: 'Architecture Principles', value: 'Published' },
+          { label: 'AI in Vuln Mgmt', value: 'Included' }
+        ],
+        artefacts: [
+          { type: 'Framework', name: 'Enterprise AI Architecture Principles', desc: 'Architecture principles guiding all AI technology decisions — ensuring consistency, interoperability, and alignment to Council\'s broader digital strategy.', content: ['Principle 1: Privacy by design — not retrofitted', 'Principle 2: Data sovereignty — prefer Australian-hosted or Microsoft/Azure-compliant storage', 'Principle 3: Interoperability — AI tools must integrate with OneCouncil/Technology One ecosystem', 'Principle 4: Observability — all AI in production must be monitorable', 'Principle 5: Human override — all AI decisions must be reversible by an authorised officer'] },
+          { type: 'Process', name: 'Privacy Impact Assessment — AI Template', desc: 'Structured PIA template tailored for AI tools, covering data flows, residency, consent, access rights, and breach scenarios.', content: ['Data inventory: what personal information does this tool process?', 'Legal basis: what authorises Council to use this data in AI?', 'Data residency: where is data processed and stored?', 'Resident rights: can individuals access, correct, or delete their data?', 'Breach scenario and response: what happens if training data or outputs are compromised?'] },
+          { type: 'Framework', name: 'AI Data Lineage Map', desc: 'Living documentation of data flows from source systems through AI tools to outputs — enabling audit, privacy verification, and impact tracing.', content: ['Source systems: CRM, OneCouncil, GIS, IoT, document management', 'AI tool processing step: what transformation or inference occurs?', 'Output destinations: reports, dashboards, decision systems, resident-facing tools', 'Personal information flags at each stage', 'Reviewed when new data sources or tools are added'] }
+        ]
+      },
+      {
+        code: 'L3', title: 'Resilient & Trustworthy',
+        desc: 'AI infrastructure is resilient, observable, and energy-aware. Cyber resilience covers AI attack surfaces. Technology operates within a mature risk management framework.',
+        checklist: [
+          'AI-specific threat model developed and reviewed annually',
+          'Model drift and performance degradation monitoring active for all production AI',
+          'Energy and sustainability metrics tracked for AI workloads',
+          'Business continuity plan covers AI system failure or compromise',
+          'Penetration testing scope includes AI tool attack vectors'
+        ],
+        kpis: [
+          { label: 'AI Threat Model', value: 'Current' },
+          { label: 'Drift Monitoring', value: 'Active' },
+          { label: 'AI in BCP', value: 'Covered' }
+        ],
+        artefacts: [
+          { type: 'Framework', name: 'AI Cyber Threat Model', desc: 'Threat model specifically addressing AI attack surfaces — prompt injection, data poisoning, model extraction, and adversarial inputs.', content: ['Threat category mapping: STRIDE adapted for AI/ML systems', 'Specific threats: prompt injection, training data poisoning, model inversion, output manipulation', 'Control mapping per threat: preventive, detective, corrective', 'Residual risk assessment and acceptance threshold', 'Annual review + triggered review when new AI capabilities deployed'] },
+          { type: 'Process', name: 'AI Performance & Drift Monitoring Runbook', desc: 'Operational runbook for monitoring AI tool performance in production — detecting drift, degradation, and anomalous outputs before they cause harm.', content: ['Monitoring tools and alert thresholds per AI use case', 'Drift triggers: what constitutes a significant performance change?', 'Alert → triage → escalation → remediation workflow', 'Human review required when alert is triggered', 'Monthly reporting to AI Governance Committee'] },
+          { type: 'Report', name: 'AI Sustainability & Energy Report', desc: 'Annual report on the energy footprint of Council\'s AI workloads, aligned to Council\'s Net Zero and Digital Sustainability commitments.', content: ['Energy consumption per AI workload (estimated via cloud provider data)', 'Comparison to prior year and trajectory', 'Optimisation actions taken: model efficiency, workload scheduling, provider selection', 'Alignment to Council\'s Climate Emergency commitments', 'Disclosed in Annual Report — AI sustainability section'] }
+        ]
+      },
+      {
+        code: 'L4', title: 'Future-Proof Platform',
+        desc: 'Technology architecture anticipates emerging AI capabilities. Zero-trust security for AI. Council\'s AI platform is a competitive and community asset.',
+        checklist: [
+          'Zero-trust architecture principles applied to AI tool access and data flows',
+          'AI platform strategy includes edge AI and agentic AI infrastructure readiness',
+          'Technology partnerships with Microsoft, councils, and universities formalised',
+          'AI infrastructure costs optimised against value delivered — dynamic provisioning',
+          'Council\'s data assets treated as a strategic AI platform resource'
+        ],
+        kpis: [
+          { label: 'Zero Trust Coverage', value: 'AI scope' },
+          { label: 'Agentic Readiness', value: 'Assessed' },
+          { label: 'Data as Asset', value: 'Formalised' }
+        ],
+        artefacts: [
+          { type: 'Framework', name: 'Zero Trust AI Access Framework', desc: 'Security framework applying zero-trust principles to AI tool access, data flows, and agent orchestration — eliminating implicit trust in AI systems.', content: ['Identity verification: every AI tool access event authenticated, not assumed', 'Least-privilege data access: AI tools receive only the data they need for the specific task', 'Micro-segmentation: AI workloads isolated by risk and data sensitivity tier', 'Continuous verification: no persistent sessions for high-risk AI data flows', 'Agentic AI controls: agent identity, scope limits, and audit trail requirements'] },
+          { type: 'Framework', name: 'AI Platform Strategy & Roadmap', desc: 'Forward-looking technology strategy positioning Council\'s AI platform for emerging capabilities — agentic AI, edge AI, and sovereign data infrastructure.', content: ['Current state: approved tools, architecture, and integrations', 'Capability horizon: what AI capabilities are coming and when?', 'Platform investments: data fabric, vector stores, agent orchestration, observability', 'Sovereignty and resilience: data residency, multi-vendor strategy, business continuity', 'Investment profile: 3-year technology roadmap with cost and benefit estimates'] },
+          { type: 'Report', name: 'Data as a Strategic Asset — AI Readiness Assessment', desc: 'Assessment of Council\'s data assets against AI readiness criteria — quality, accessibility, governance, and strategic value for AI applications.', content: ['Data inventory: what structured and unstructured data does Council hold?', 'Quality assessment: completeness, accuracy, timeliness per domain', 'AI readiness gaps: what data investment is needed to unlock AI use cases?', 'Strategic value map: which data assets create the most AI leverage?', 'Investment recommendations: data platform, master data management, ontology development'] }
+        ]
+      }
+    ]
+  }
+};
+
+let currentEnabler = null;
+let currentLevel = null;
+
+function getColor(key) {
+  const colors = { c: '#1a8c7e', a: '#1e6fa8', r: '#9b2335', e: '#c96a14' };
+  return colors[key];
+}
+
+function updateBreadcrumb() {
+  const bc = document.getElementById('breadcrumb');
+  let html = `<span class="breadcrumb-item ${!currentEnabler ? 'active' : ''}" onclick="goHome()">Framework</span>`;
+  if (currentEnabler) {
+    const e = ENABLERS[currentEnabler];
+    html += `<span class="breadcrumb-sep">›</span>`;
+    html += `<span class="breadcrumb-item ${!currentLevel ? 'active' : ''}" onclick="openEnabler('${currentEnabler}')">${e.name}</span>`;
+  }
+  if (currentLevel !== null) {
+    const lvl = ENABLERS[currentEnabler].levels[currentLevel];
+    html += `<span class="breadcrumb-sep">›</span>`;
+    html += `<span class="breadcrumb-item active">${lvl.code}: ${lvl.title}</span>`;
+  }
+  bc.innerHTML = html;
+}
+
+function showView(id) {
+  document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+}
+
+function goHome() {
+  currentEnabler = null; currentLevel = null;
+  showView('view-home');
+  updateBreadcrumb();
+}
+
+function openEnabler(key) {
+  currentEnabler = key; currentLevel = null;
+  const e = ENABLERS[key];
+  const color = getColor(key);
+
+  // Header
+  document.getElementById('lh-letter').textContent = e.letter;
+  document.getElementById('lh-letter').style.background = color;
+  document.getElementById('lh-title').textContent = e.name;
+  document.getElementById('lh-title').style.color = color;
+  document.getElementById('lh-sub').textContent = e.sub;
+
+  // Levels
+  const grid = document.getElementById('levels-grid');
+  grid.innerHTML = e.levels.map((lvl, idx) => `
+    <div class="level-card" onclick="openLevel(${idx})">
+      <div class="level-num-badge">${lvl.code}</div>
+      <div class="level-title">${lvl.title}</div>
+      <div class="level-desc">${lvl.desc}</div>
+      <div class="level-artefact-count">📄 <span>${lvl.artefacts.length}</span> artefacts</div>
+    </div>
+  `).join('');
+
+  const view = document.getElementById('view-levels');
+  view.className = `view active view-${key}`;
+  showView('view-levels');
+  updateBreadcrumb();
+}
+
+function openLevel(idx) {
+  currentLevel = idx;
+  const e = ENABLERS[currentEnabler];
+  const lvl = e.levels[idx];
+  const color = getColor(currentEnabler);
+  const key = currentEnabler;
+
+  // Header
+  document.getElementById('ah-level').textContent = `${e.letter} — ${lvl.code}`;
+  document.getElementById('ah-title').textContent = lvl.title;
+  document.getElementById('ah-desc').textContent = lvl.desc;
+
+  // KPIs
+  const kpiStrip = document.getElementById('kpi-strip');
+  kpiStrip.innerHTML = lvl.kpis.map(k => `
+    <div class="kpi-item">
+      <div class="kpi-label">${k.label}</div>
+      <div class="kpi-value" style="color:${color}">${k.value}</div>
+    </div>
+  `).join('');
+
+  // Checklist
+  const cl = document.getElementById('checklist-items');
+  cl.innerHTML = lvl.checklist.map(item => `
+    <div class="checklist-item">
+      <div class="checklist-dot" style="border-color:${color}"></div>
+      <span>${item}</span>
+    </div>
+  `).join('');
+
+  // Artefacts
+  const ag = document.getElementById('artefacts-grid');
+  ag.innerHTML = lvl.artefacts.map((art, i) => `
+    <div class="artefact-card" onclick="openArtefact(${idx}, ${i})">
+      <div class="artefact-type">${art.type}</div>
+      <div class="artefact-name">${art.name}</div>
+      <div class="artefact-desc-short">${art.desc.substring(0, 80)}…</div>
+      <div class="artefact-preview-cta">View details →</div>
+    </div>
+  `).join('');
+
+  const view = document.getElementById('view-artefacts');
+  view.className = `view active view-${key}`;
+
+  document.getElementById('artefacts-back').onclick = () => openEnabler(key);
+  showView('view-artefacts');
+  updateBreadcrumb();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function openArtefact(levelIdx, artIdx) {
+  const e = ENABLERS[currentEnabler];
+  const lvl = e.levels[levelIdx];
+  const art = lvl.artefacts[artIdx];
+  const color = getColor(currentEnabler);
+
+  document.getElementById('modal-type').textContent = art.type;
+  document.getElementById('modal-type').style.color = color;
+  document.getElementById('modal-title').textContent = art.name;
+
+  document.getElementById('modal-body').innerHTML = `
+    <div class="modal-section-title">What this artefact does</div>
+    <p class="modal-desc">${art.desc}</p>
+    <div class="modal-section-title">Key contents</div>
+    <div class="modal-content-rows">
+      ${art.content.map(c => `
+        <div class="modal-content-row">
+          <span class="modal-row-icon" style="color:${color}">◆</span>
+          <span>${c}</span>
+        </div>
+      `).join('')}
+    </div>
+    <div class="modal-section-title">Context</div>
+    <p class="modal-desc">Part of the <strong>${e.name}</strong> enabler at maturity level <strong>${lvl.code}: ${lvl.title}</strong>.</p>
+  `;
+
+  document.getElementById('modal-footer').innerHTML = `
+    <button class="modal-btn modal-btn-primary" style="background:${color}" onclick="closeModalDirect()">Close Preview</button>
+    <button class="modal-btn modal-btn-secondary" onclick="closeModalDirect()">Back to Artefacts</button>
+  `;
+
+  document.getElementById('modal-overlay').classList.add('open');
+}
+
+function closeModal(e) {
+  if (e.target === document.getElementById('modal-overlay')) closeModalDirect();
+}
+function closeModalDirect() {
+  document.getElementById('modal-overlay').classList.remove('open');
+}
+</script>
+</body>
+</html>
